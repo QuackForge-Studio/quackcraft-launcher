@@ -38,6 +38,8 @@ jobs:
       ARTIFACT_NAME: ${{ matrix.name }}-QuackCraft
       BUILD_PLATFORM: ci
       CMAKE_PRESET: ${{ matrix.preset }}
+      QT_HOST: ${{ runner.os == 'macOS' && 'mac' || runner.os == 'Windows' && 'windows' || 'linux' }}
+      QT_ARCH: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
     defaults:
       run:
         shell: bash
@@ -46,7 +48,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: false
 
       - name: Install dependencies (Ubuntu)
         if: runner.os == 'Linux'
@@ -70,32 +72,39 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt }}
-          host: ${{ runner.os == 'macOS' && 'mac' || runner.os == 'Windows' && 'windows' || 'linux' }}
+          host: ${{ env.QT_HOST }}
           target: desktop
-          arch: ${{ runner.arch }}
+          arch: ${{ env.QT_ARCH }}
           modules: 'qtshadertools'
           cache: true
 
       - name: Bootstrap vcpkg
-        if: runner.os != 'Windows'
         run: |
+          mkdir -p cmake/vcpkg
           cd cmake/vcpkg
-          if [ "$RUNNER_OS" = "Linux" ] || [ "$RUNNER_OS" = "macOS" ]; then
-            ./bootstrap-vcpkg.sh
+          git init -q
+          git remote add origin https://github.com/microsoft/vcpkg.git
+          git fetch --depth 1 origin 2d6a6cf3ac9a7cc93942c3d289a2f9c661a6f4a7
+          git checkout -q FETCH_HEAD
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cmd.exe /c "bootstrap-vcpkg.bat" 2>&1
           else
-            cmd.exe /c "bootstrap-vcpkg.bat" 2>/dev/null || ./bootstrap-vcpkg.sh
+            ./bootstrap-vcpkg.sh
           fi
           cd ../..
 
-      - name: Bootstrap vcpkg (Windows)
-        if: runner.os == 'Windows'
+      - name: Fetch libnbtplusplus
         run: |
-          cd cmake/vcpkg
-          cmd.exe /c "bootstrap-vcpkg.bat" 2>&1 || powershell.exe -ExecutionPolicy Bypass -File bootstrap-vcpkg.ps1
-          cd ../..
+          if [ ! -d libraries/libnbtplusplus/.git ]; then
+            git clone --depth 1 https://github.com/PrismLauncher/libnbtplusplus.git libraries/libnbtplusplus
+          fi
 
       - name: Configure
+        env:
+          QT_VERSION: ${{ matrix.qt }}
         run: |
+          echo "Qt6_DIR=${Qt6_DIR}"
+          echo "VCPKG_TRIPLET=${VCPKG_TRIPLET}"
           cmake --preset "$CMAKE_PRESET" \
             -D CMAKE_PREFIX_PATH="${Qt6_DIR}" \
             -D VCPKG_HOST_TRIPLET="$VCPKG_TRIPLET" \

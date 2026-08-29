@@ -51,7 +51,7 @@ jobs:
 
     defaults:
       run:
-        shell: ${{ matrix.msystem != '' && format('msys2 {0}', matrix.msystem) || 'bash' }}
+        shell: bash
 
     steps:
       - name: Checkout

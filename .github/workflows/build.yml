@@ -108,10 +108,23 @@ jobs:
           fi
 
       - name: Configure
+        env:
+          VCPKG_TRIPLET_ECHO: ${{ env.VCPKG_TRIPLET }}
         run: |
-          cmake --preset "$CMAKE_PRESET" \
-            -D VCPKG_HOST_TRIPLET="$VCPKG_TRIPLET" \
-            -D VCPKG_TARGET_TRIPLET="$VCPKG_TRIPLET"
+          echo "=== Environment diagnostics ==="
+          echo "CMAKE_PRESET=$CMAKE_PRESET"
+          echo "VCPKG_TRIPLET=$VCPKG_TRIPLET"
+          echo "VCPKG_ROOT=$VCPKG_ROOT"
+          echo "VCPKG_HOST_TRIPLET=$VCPKG_HOST_TRIPLET"
+          echo "VCPKG_TARGET_TRIPLET=$VCPKG_TARGET_TRIPLET"
+          echo "Qt6_DIR=$Qt6_DIR"
+          which cmake && cmake --version | head -1
+          which vcpkg 2>/dev/null && vcpkg version 2>/dev/null | head -2 || echo "vcpkg not on PATH"
+          which ninja && ninja --version
+          echo "=== Preset details ==="
+          cmake --preset "$CMAKE_PRESET" --debug-output 2>&1 | tail -200 || true
+          echo "=== First-pass configure (without triplet, to see if Qt is found) ==="
+          cmake --preset "$CMAKE_PRESET" 2>&1 | tail -200 || true
 
       - name: Build
         run: |

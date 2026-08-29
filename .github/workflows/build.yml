@@ -20,26 +20,34 @@ jobs:
           - name: Linux
             os: ubuntu-24.04
             preset: linux
+            qt-host: linux
+            qt-arch: x64
             qt: '6.10'
           - name: macOS
             os: macos-14
             preset: macos
+            qt-host: mac
+            qt-arch: x64
             qt: '6.10'
           - name: Windows-MinGW
             os: windows-2022
             preset: windows_mingw
+            qt-host: windows
+            qt-arch: x64
             qt: '6.10'
           - name: Windows-MSVC
             os: windows-2022
             preset: windows_msvc
+            qt-host: windows
+            qt-arch: x64
             qt: '6.10'
 
     env:
       ARTIFACT_NAME: ${{ matrix.name }}-QuackCraft
       BUILD_PLATFORM: ci
       CMAKE_PRESET: ${{ matrix.preset }}
-      QT_HOST: ${{ runner.os == 'macOS' && 'mac' || runner.os == 'Windows' && 'windows' || 'linux' }}
-      QT_ARCH: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
+      QT_HOST: ${{ matrix.qt-host }}
+      QT_ARCH: ${{ matrix.qt-arch }}
     defaults:
       run:
         shell: bash

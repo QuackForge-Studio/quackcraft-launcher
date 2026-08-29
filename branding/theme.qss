@@ -1,0 +1,180 @@
+/* SPDX-License-Identifier: GPL-3.0-only
+ *
+ * QuackCraft Launcher theme
+ * Based on Prism Launcher (GPL-3.0)
+ * Copyright (C) 2026 QuackForge Studio
+ *
+ * Apply on top of the chosen base theme (Dark/Bright) via:
+ *   Settings > Themes > Custom theme > quackcraft.qss
+ */
+
+QMainWindow,
+QDialog {
+    background-color: #0F1419;
+    color: #F5F7FA;
+}
+
+QWidget {
+    color: #F5F7FA;
+    font-family: "Inter", "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+/* --- Top bar / toolbar --- */
+QToolBar {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #075C4A, stop:1 #0E7C66);
+    border: none;
+    padding: 6px;
+    spacing: 8px;
+}
+
+QToolBar QToolButton {
+    color: #F5F7FA;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+QToolBar QToolButton:hover {
+    background: rgba(245, 183, 0, 0.18);
+    border: 1px solid #F5B700;
+}
+
+QToolBar QToolButton:pressed {
+    background: rgba(245, 183, 0, 0.32);
+}
+
+/* --- Sidebar (instance list) --- */
+QListView#instanceList {
+    background: #1A1F26;
+    border: none;
+    border-right: 1px solid #2A323D;
+    padding: 4px;
+}
+
+QListView#instanceList::item {
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin: 2px 4px;
+    color: #F5F7FA;
+}
+
+QListView#instanceList::item:hover {
+    background: #2A323D;
+}
+
+QListView#instanceList::item:selected {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #0E7C66, stop:1 #3FA38B);
+    color: #F5F7FA;
+}
+
+/* --- Featured QuackCraft row --- */
+QFrame#quackcraftFeatured {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+        stop:0 #0E7C66, stop:1 #075C4A);
+    border: 1px solid #F5B700;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+QFrame#quackcraftFeatured QLabel#quackcraftTitle {
+    color: #F5B700;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+QFrame#quackcraftFeatured QLabel#quackcraftSubtitle {
+    color: #F5F7FA;
+    font-size: 12px;
+}
+
+/* --- Buttons --- */
+QPushButton#primaryPlay,
+QPushButton#quickPlay {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #F5B700, stop:1 #C49000);
+    color: #0F1419;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-weight: 700;
+    font-size: 14px;
+    min-height: 36px;
+}
+
+QPushButton#primaryPlay:hover,
+QPushButton#quickPlay:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #FFD24A, stop:1 #F5B700);
+}
+
+QPushButton#primaryPlay:pressed,
+QPushButton#quickPlay:pressed {
+    background: #C49000;
+}
+
+QPushButton#secondaryAction {
+    background: transparent;
+    color: #3FA38B;
+    border: 1px solid #3FA38B;
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+QPushButton#secondaryAction:hover {
+    background: rgba(63, 163, 139, 0.15);
+}
+
+/* --- Status bar --- */
+QStatusBar {
+    background: #1A1F26;
+    color: #9BA4B0;
+    border-top: 1px solid #2A323D;
+}
+
+QStatusBar QLabel {
+    color: #9BA4B0;
+}
+
+/* --- News panel --- */
+QWidget#newsPanel {
+    background: #1A1F26;
+    border: 1px solid #2A323D;
+    border-radius: 8px;
+}
+
+QWidget#newsPanel QLabel#newsTitle {
+    color: #F5B700;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+QWidget#newsPanel QLabel#newsBody {
+    color: #F5F7FA;
+    font-size: 12px;
+}
+
+/* --- Form / inputs --- */
+QLineEdit, QComboBox, QSpinBox {
+    background: #0F1419;
+    color: #F5F7FA;
+    border: 1px solid #2A323D;
+    border-radius: 4px;
+    padding: 5px 8px;
+    selection-background-color: #0E7C66;
+}
+
+QLineEdit:focus, QComboBox:focus, QSpinBox:focus {
+    border: 1px solid #F5B700;
+}
+
+QLabel#muted {
+    color: #9BA4B0;
+}
+
+QLabel#brand {
+    color: #F5B700;
+    font-weight: 700;
+}

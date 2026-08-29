@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-License-Identifier: GPL-3.0-only
+  QuackCraft Launcher logo
+  Based on Prism Launcher layout (GPL-3.0) - replaced branding
+  Copyright (C) 2026 QuackForge Studio
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0E7C66"/>
+      <stop offset="1" stop-color="#075C4A"/>
+    </linearGradient>
+    <linearGradient id="duck" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD24A"/>
+      <stop offset="1" stop-color="#F5B700"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded background -->
+  <rect x="8" y="8" width="240" height="240" rx="48" ry="48" fill="url(#bg)" stroke="#F5B700" stroke-width="4"/>
+
+  <!-- Stylized duck silhouette (Minecraft-blocky friendly) -->
+  <g fill="url(#duck)">
+    <!-- Body -->
+    <rect x="60" y="120" width="120" height="64" rx="14"/>
+    <!-- Head -->
+    <rect x="120" y="68" width="64" height="64" rx="12"/>
+    <!-- Beak -->
+    <rect x="184" y="92" width="22" height="14" rx="3" fill="#C49000"/>
+    <!-- Eye -->
+    <rect x="156" y="86" width="8" height="8" fill="#0F1419"/>
+    <!-- Wing accent -->
+    <rect x="78" y="138" width="40" height="30" rx="6" fill="#F5B700" opacity="0.7"/>
+    <!-- Feet -->
+    <rect x="92" y="184" width="14" height="14" fill="#C49000"/>
+    <rect x="138" y="184" width="14" height="14" fill="#C49000"/>
+  </g>
+
+  <!-- "Q" mark accent -->
+  <text x="40" y="220" font-family="Inter, sans-serif" font-size="32" font-weight="800" fill="#F5B700">QC</text>
+</svg>

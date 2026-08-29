@@ -118,7 +118,7 @@
 #include "settings/INISettingsObject.h"
 #include "settings/Setting.h"
 
-#include "branding/QuackCraftSeeder.h"
+#include "../branding/QuackCraftSeeder.h"
 
 #include "meta/Index.h"
 #include "translations/TranslationsModel.h"

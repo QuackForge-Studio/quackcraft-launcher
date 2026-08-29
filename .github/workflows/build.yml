@@ -121,10 +121,10 @@ jobs:
           which cmake && cmake --version | head -1
           which vcpkg 2>/dev/null && vcpkg version 2>/dev/null | head -2 || echo "vcpkg not on PATH"
           which ninja && ninja --version
-          echo "=== Preset details ==="
-          cmake --preset "$CMAKE_PRESET" --debug-output 2>&1 | tail -200 || true
-          echo "=== First-pass configure (without triplet, to see if Qt is found) ==="
-          cmake --preset "$CMAKE_PRESET" 2>&1 | tail -200 || true
+          echo "=== Real configure (exit code surfaces in build status) ==="
+          cmake --preset "$CMAKE_PRESET" \
+            -D VCPKG_HOST_TRIPLET="$VCPKG_TRIPLET" \
+            -D VCPKG_TARGET_TRIPLET="$VCPKG_TRIPLET"
 
       - name: Build
         run: |

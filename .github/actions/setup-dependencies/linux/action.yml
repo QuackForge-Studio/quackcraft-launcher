@@ -12,4 +12,5 @@ runs:
         sudo apt-get -y install \
           dpkg-dev \
           ninja-build extra-cmake-modules pkg-config \
-          libxcb-cursor-dev
+          libxcb-cursor-dev libxkbcommon-dev \
+          gamemode-dev

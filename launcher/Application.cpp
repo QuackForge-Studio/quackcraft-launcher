@@ -118,6 +118,8 @@
 #include "settings/INISettingsObject.h"
 #include "settings/Setting.h"
 
+#include "branding/QuackCraftSeeder.h"
+
 #include "meta/Index.h"
 #include "translations/TranslationsModel.h"
 
@@ -1340,6 +1342,19 @@ bool Application::event(QEvent* event)
 void Application::setupWizardFinished(int status)
 {
     qDebug() << "Wizard result =" << status;
+
+    // QuackCraft: after the first-run wizard, check whether a default
+    // "QuackCraft" instance exists. If not, log that seeding would happen
+    // here once the version-list resolution is wired up.
+    if (instances() && !instances()->count()) {
+        qInfo() << "QuackCraft: no instances yet — default instance would be created here.";
+    } else if (instances()) {
+        QuackCraft::Seeder seeder(instances());
+        if (!seeder.isSeeded()) {
+            qInfo() << "QuackCraft: default 'QuackCraft' instance not found — seeding deferred.";
+        }
+    }
+
     performMainStartupAction();
 }
 

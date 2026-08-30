@@ -139,12 +139,22 @@ jobs:
           msys2 -c 'ninja --version'
           msys2 -c 'which gcc && gcc --version | head -1'
           Write-Host "=== Real configure ==="
-          # UCRT64's <c++config.h> pre-defines NOMINMAX via the C library
-          # wrappers, but Prism's launcher/FileSystem.cpp re-defines it.
-          # Plain GCC has no -Wredefined, so we instead drop -Werror
-          # for the whole MinGW build (most of Prism's warnings are
-          # portability flags that don't matter for a working build).
-          msys2 -c "cmake --preset '${{ env.CMAKE_PRESET }}' -D VCPKG_HOST_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D VCPKG_TARGET_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D CMAKE_CXX_FLAGS='-Wno-error'"
+          # Two known incompatibilities with MinGW GCC 16 that we work
+          # around at the configure step:
+          #
+          #  1. UCRT64's <c++config.h> pre-defines NOMINMAX via the C
+          #     library wrappers, but Prism's launcher/FileSystem.cpp
+          #     re-defines it. Plain GCC has no -Wredefined, so we
+          #     drop -Werror instead (most of Prism's warnings are
+          #     portability flags that don't matter for a working build).
+          #     We also wrap the #define in #ifndef in FileSystem.cpp.
+          #
+          #  2. Precompiled headers in filelink/updater targets hit
+          #     "not used because 'QT_NEEDS_QMAIN' is defined" with the
+          #     strict pch validation GCC 16 added. Disabling PCH for
+          #     those targets costs us ~10s of build time but avoids
+          #     the error.
+          msys2 -c "cmake --preset '${{ env.CMAKE_PRESET }}' -D VCPKG_HOST_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D VCPKG_TARGET_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D CMAKE_CXX_FLAGS='-Wno-error' -D Launcher_USE_PCH=OFF"
 
       - name: Build (non-MinGW)
         if: matrix.msystem == ''

@@ -55,6 +55,7 @@
 #include <QActionGroup>
 #include <QApplication>
 #include <QButtonGroup>
+#include <QDialog>
 #include <QFileDialog>
 #include <QHBoxLayout>
 #include <QHeaderView>
@@ -69,6 +70,7 @@
 #include <QShortcut>
 #include <QStatusBar>
 #include <QToolBar>
+#include <QVBoxLayout>
 #include <QToolButton>
 #include <QWidget>
 #include <QWidgetAction>
@@ -113,6 +115,8 @@
 #include "ui/themes/ThemeManager.h"
 #include "ui/widgets/LabeledToolButton.h"
 
+#include "branding/QuickPlayPage.h"
+
 #include "minecraft/PackProfile.h"
 #include "minecraft/VersionFile.h"
 #include "minecraft/WorldList.h"
@@ -149,6 +153,21 @@ QString profileInUseFilter(const QString& profile, bool used)
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // QuackCraft: add a "Quick Play" action to the main toolbar that
+    // pops up a minimal name+version+play dialog. Brand new users
+    // who don't know what an "instance" is can just hit it and go.
+    {
+        m_quickPlayAction = new QAction(this);
+        m_quickPlayAction->setText(tr("Quick Play"));
+        m_quickPlayAction->setToolTip(
+            tr("Enter a name and a version, then hit Play. (QuackCraft)"));
+        // Reuse one of the existing toolbar icons as a placeholder;
+        // a real duck icon can be swapped in later.
+        m_quickPlayAction->setIcon(QIcon::fromTheme("media-playback-start"));
+        ui->mainToolBar->insertAction(ui->actionAddInstance, m_quickPlayAction);
+        connect(m_quickPlayAction, &QAction::triggered, this, &MainWindow::onQuickPlayTriggered);
+    }
 
     setWindowIcon(APPLICATION->logo());
     setWindowTitle(APPLICATION->applicationDisplayName());
@@ -1485,6 +1504,25 @@ void MainWindow::newsButtonClicked()
 void MainWindow::onCatChanged(int)
 {
     setCatBackground(APPLICATION->settings()->get("TheCat").toBool());
+}
+
+void MainWindow::onQuickPlayTriggered()
+{
+    // QuackCraft Quick Play: a minimal name+version+play dialog.
+    // The full Prism launcher is still here for power users; this
+    // is the happy path for new users.
+    QDialog dlg(this);
+    dlg.setWindowTitle(tr("QuackCraft Quick Play"));
+    dlg.setModal(true);
+    dlg.resize(640, 480);
+
+    auto* layout = new QVBoxLayout(&dlg);
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    QuackCraft::QuickPlayPage* page = new QuackCraft::QuickPlayPage(&dlg);
+    layout->addWidget(page);
+
+    dlg.exec();
 }
 
 void MainWindow::on_actionAbout_triggered()

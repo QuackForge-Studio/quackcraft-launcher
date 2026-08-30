@@ -787,6 +787,8 @@ SET(LAUNCHER_SOURCES
     # so the build picks them up. The include path is set above.
     ../branding/QuackCraftSeeder.h
     ../branding/QuackCraftSeeder.cpp
+    ../branding/QuickPlayPage.h
+    ../branding/QuickPlayPage.cpp
 
     # Application base
     Application.h

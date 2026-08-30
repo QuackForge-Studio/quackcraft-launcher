@@ -93,6 +93,9 @@ class MainWindow : public QMainWindow {
 
     void onCatChanged(int);
 
+    // QuackCraft: pops up the minimal name+version+play dialog.
+    void onQuickPlayTriggered();
+
     void on_actionAbout_triggered();
 
     void on_actionAddInstance_triggered();
@@ -234,9 +237,15 @@ class MainWindow : public QMainWindow {
     void instanceFromInstanceTask(InstanceTask* task);
 
    private:
-    Ui::MainWindow* ui;
-    // these are managed by Qt's memory management model!
-    InstanceView* view = nullptr;
+   Ui::MainWindow* ui;
+   // these are managed by Qt's memory management model!
+   InstanceView* view = nullptr;
+
+   // QuackCraft: action that opens the Quick Play dialog. The
+   // dialog itself is a stack-allocated local in the slot — we
+   // only need to keep the QAction around so Qt's toolbar can
+   // parent it.
+   QAction* m_quickPlayAction = nullptr;
     InstanceProxyModel* proxymodel = nullptr;
     QToolButton* newsLabel = nullptr;
     QLabel* m_statusLeft = nullptr;

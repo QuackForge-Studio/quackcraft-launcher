@@ -58,7 +58,11 @@
 #include "StringUtils.h"
 
 #if defined Q_OS_WIN32
+// NOMINMAX may already be defined by UCRT64's <c++config.h>. Guard so
+// MinGW GCC doesn't treat the redefinition as a hard error.
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #define WIN32_LEAN_AND_MEAN
 #include <objidl.h>
 #include <shlguid.h>

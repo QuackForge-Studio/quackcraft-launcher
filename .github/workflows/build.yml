@@ -32,7 +32,7 @@ jobs:
           - name: Windows-MinGW
             os: windows-2022
             preset: windows_mingw
-            msystem: CLANG64
+            msystem: UCRT64
             vcvars-arch: amd64_x86
             qt-version: '6.10.2'
           - name: Windows-MSVC

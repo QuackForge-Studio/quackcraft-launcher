@@ -115,7 +115,7 @@
 #include "ui/themes/ThemeManager.h"
 #include "ui/widgets/LabeledToolButton.h"
 
-#include "branding/QuickPlayPage.h"
+#include "QuickPlayPage.h"
 
 #include "minecraft/PackProfile.h"
 #include "minecraft/VersionFile.h"

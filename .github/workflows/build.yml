@@ -107,7 +107,8 @@ jobs:
             cd ../..
           fi
 
-      - name: Configure
+      - name: Configure (non-MinGW)
+        if: matrix.msystem == ''
         env:
           VCPKG_TRIPLET_ECHO: ${{ env.VCPKG_TRIPLET }}
         shell: bash
@@ -127,7 +128,22 @@ jobs:
             -D VCPKG_HOST_TRIPLET="$VCPKG_TRIPLET" \
             -D VCPKG_TARGET_TRIPLET="$VCPKG_TRIPLET"
 
-      - name: Build
+      - name: Configure (MinGW)
+        if: matrix.msystem != ''
+        shell: powershell
+        run: |
+          Write-Host "=== Environment diagnostics ==="
+          Write-Host "CMAKE_PRESET=${{ env.CMAKE_PRESET }}"
+          Write-Host "VCPKG_TRIPLET=${{ env.VCPKG_TRIPLET }}"
+          Write-Host "Qt6_DIR=${{ env.Qt6_DIR }}"
+          msys2 -c 'cmake --version | head -1'
+          msys2 -c 'ninja --version'
+          msys2 -c 'which gcc && gcc --version | head -1'
+          Write-Host "=== Real configure ==="
+          msys2 -c "cmake --preset '${{ env.CMAKE_PRESET }}' -D VCPKG_HOST_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D VCPKG_TARGET_TRIPLET='${{ env.VCPKG_TRIPLET }}'"
+
+      - name: Build (non-MinGW)
+        if: matrix.msystem == ''
         shell: bash
         run: |
           echo "=== Build directory ==="
@@ -136,10 +152,26 @@ jobs:
           echo "=== Running cmake --build --preset $CMAKE_PRESET ==="
           cmake --build --preset "$CMAKE_PRESET" 2>&1 | tail -100
 
-      - name: Run tests
+      - name: Build (MinGW)
+        if: matrix.msystem != ''
+        shell: powershell
+        run: |
+          Write-Host "=== Build directory ==="
+          if (Test-Path build) { Get-ChildItem build | Select-Object Name | Format-Table | Out-String } else { Write-Host "no build/ dir" }
+          msys2 -c "cmake --build --preset '${{ env.CMAKE_PRESET }}' 2>&1 | tail -100"
+
+      - name: Run tests (non-MinGW)
+        if: matrix.msystem == ''
         shell: bash
         run: |
           ctest --preset "$CMAKE_PRESET" --build-config Release --output-on-failure
+        continue-on-error: true
+
+      - name: Run tests (MinGW)
+        if: matrix.msystem != ''
+        shell: powershell
+        run: |
+          msys2 -c "ctest --preset '${{ env.CMAKE_PRESET }}' --build-config Release --output-on-failure"
         continue-on-error: true
 
       - name: Upload binary artifact

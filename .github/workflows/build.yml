@@ -201,6 +201,9 @@ jobs:
         with:
           name: quackcraft-${{ matrix.name }}
           path: |
+            build/Release/quackcraftlauncher*
+            build/Release/*.exe
+            build/Release/QuackCraftLauncher*
             build/quackcraftlauncher*
             build/*.exe
             build/QuackCraftLauncher*

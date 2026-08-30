@@ -76,8 +76,7 @@ jobs:
             git clone --depth 1 https://github.com/PrismLauncher/libnbtplusplus.git libraries/libnbtplusplus
           fi
 
-      - name: Bootstrap vcpkg (non-MinGW)
-        if: matrix.msystem == ''
+      - name: Bootstrap vcpkg (all platforms)
         shell: bash
         run: |
           if [ ! -d cmake/vcpkg/.git ]; then

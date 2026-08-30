@@ -154,7 +154,15 @@ jobs:
           #     strict pch validation GCC 16 added. Disabling PCH for
           #     those targets costs us ~10s of build time but avoids
           #     the error.
-          msys2 -c "cmake --preset '${{ env.CMAKE_PRESET }}' -D VCPKG_HOST_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D VCPKG_TARGET_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D CMAKE_CXX_FLAGS='-Wno-error' -D Launcher_USE_PCH=OFF"
+          #
+          #  3. ENABLE_LTO=ON from CMakePresets.json triggers a "multiple
+          #     definition" linker error on MinGW GCC 16 with the auto-
+          #     generated mocs_compilation.cpp — MOC-generated vtables
+          #     collide with the real ones in our .cpp.obj. Disabling
+          #     LTO restores correct linking; we lose ~10% binary size
+          #     on the MinGW build which is fine for a non-default
+          #     artifact.
+          msys2 -c "cmake --preset '${{ env.CMAKE_PRESET }}' -D VCPKG_HOST_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D VCPKG_TARGET_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D CMAKE_CXX_FLAGS='-Wno-error' -D Launcher_USE_PCH=OFF -D ENABLE_LTO=OFF"
 
       - name: Build (non-MinGW)
         if: matrix.msystem == ''

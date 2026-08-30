@@ -12,7 +12,7 @@ QuackCraft Launcher is Prism Launcher with:
 
 - Re-branded UI (QuackCraft green + yellow palette, duck logo)
 - Renamed AppID, package, env var, and binary
-- Repointed news / wiki / bug-tracker / meta URLs to `quackcraft.studio`
+- Repointed news / wiki / bug-tracker / meta URLs to `play.quackforge.xyz`
 - A stub `branding/QuackCraftSeeder` that detects/creates the default
   "QuackCraft" instance
 - Theme override (QuackCraft colors) at `branding/theme.qss`

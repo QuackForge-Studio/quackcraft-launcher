@@ -11,7 +11,7 @@ endif()
 set(Launcher_CommonName "QuackCraftLauncher")
 set(Launcher_DisplayName "QuackCraft Launcher")
 set(Launcher_AppID "studio.quackcraft.launcher")
-set(Launcher_Domain "quackcraft.studio")
+set(Launcher_Domain "play.quackforge.xyz")
 set(Launcher_Git "https://github.com/QuackForge-Studio/quackcraft-launcher")
 
 set(Launcher_Name "${Launcher_CommonName}" PARENT_SCOPE)

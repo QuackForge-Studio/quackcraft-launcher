@@ -10,7 +10,7 @@ Before you can cut a release, the following must be true:
 
 - CI on `main` is **green** for all 4 build targets (Linux, macOS,
   Windows-MinGW, Windows-MSVC). Check <https://github.com/QuackForge-Studio/quackcraft-launcher/actions>.
-- A `quackcraft.studio` domain is owned and DNS-resolvable, with an
+- A `play.quackforge.xyz` domain is owned and DNS-resolvable, with an
   A/AAAA record pointing to your distribution host (see step 6).
 - A GitHub PAT or `GITHUB_TOKEN` with `contents: write` on the
   `QuackForge-Studio/quackcraft-launcher` repo.
@@ -69,10 +69,10 @@ least a clean user account) and verify:
 - [ ] App launches in < 2 seconds
 - [ ] QuackForge duck icon shows up in the title bar / task bar
 - [ ] Theme is green/yellow, not Prism blue
-- [ ] `quackcraft.studio` is the URL shown in Settings → General
+- [ ] `play.quackforge.xyz` is the URL shown in Settings → General
     (Help, News, etc.)
 - [ ] First-run wizard runs and finishes
-- [ ] You can install a vanilla Minecraft 1.21.1 instance and launch it
+- [ ] You can install a vanilla Minecraft 26.2 instance and launch it
 - [ ] Java downloader works (or system Java is detected)
 
 If anything is broken, **do not** publish. Tag a `0.1.1-rc1` on a
@@ -97,14 +97,14 @@ First public build of QuackCraft Launcher, a fork of
 the QuackCraft community.
 
 ### What works
-- Install vanilla Minecraft 1.21.1 with one click
-- Fabric / Forge / Quilt mod loader support
-- Microsoft account login (offline play also works)
-- Multi-instance management
-- Modrinth, CurseForge, and FTB mod browsing
-- Pre-seeded "QuackCraft" instance that joins `play.quackcraft.studio`
-  on first run (if the server is up; you can also just delete it and
-  create your own)
+- Simple Quick Play UI: enter in-game name, pick a Minecraft
+  version, hit the big Play button
+- Optional offline play (no Microsoft login required)
+- Pre-seeded "QuackCraft" instance that joins `play.quackforge.xyz:25565`
+  on first run (advanced users can disable or delete it)
+- Full Prism Launcher under the hood: open Settings to access
+  Fabric / Forge / Quilt mod loader, Modrinth / CurseForge / FTB mod
+  browsing, multi-instance management, etc.
 
 ### What's not in this build yet
 - Automatic update notifications (auto-update will land in 0.2)
@@ -145,14 +145,14 @@ is what most sites link to.
 Post the release in:
 - QuackCraft Discord `#launcher-updates` channel
 - QuackCraft email newsletter (if you have one)
-- A short post on `quackcraft.studio` blog
+- A short post on `play.quackforge.xyz` blog
 
 ## 9. Post-release monitoring
 
 For the first 48 hours after release, keep an eye on:
 - GitHub Issues for crash reports
 - Discord `#launcher-help` for installation problems
-- Telemetry from `quackcraft.studio/launcher-stats` (if you've set it up)
+- Telemetry from `play.quackforge.xyz/launcher-stats` (if you've set it up)
 
 If a P0 bug shows up, cut `0.1.1` immediately and re-run the matrix.
 
@@ -175,7 +175,7 @@ there are still a few pieces that are not yet in place:
 - [ ] **AppImage / NSIS installer packaging** on Linux and Windows.
       We currently ship a raw binary, which is fine for early access
       but not user-friendly.
-- [ ] **A `quackcraft.studio` landing page** that the launcher can
+- [ ] **A `play.quackforge.xyz` landing page** that the launcher can
       pull news/help/issue-tracker URLs from. The rebranding work
       points everything at this domain; the domain itself has to
       exist for the URLs to resolve.

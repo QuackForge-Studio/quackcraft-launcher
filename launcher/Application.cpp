@@ -1344,15 +1344,12 @@ void Application::setupWizardFinished(int status)
     qDebug() << "Wizard result =" << status;
 
     // QuackCraft: after the first-run wizard, check whether a default
-    // "QuackCraft" instance exists. If not, log that seeding would happen
-    // here once the version-list resolution is wired up.
-    if (instances() && !instances()->count()) {
-        qInfo() << "QuackCraft: no instances yet — default instance would be created here.";
-    } else if (instances()) {
+    // "QuackCraft" instance exists. If not, kick off seeding (which
+    // today is a stub that just logs the parameters; a follow-up will
+    // wire the actual VanillaCreationTask against the version list).
+    if (instances()) {
         QuackCraft::Seeder seeder(instances());
-        if (!seeder.isSeeded()) {
-            qInfo() << "QuackCraft: default 'QuackCraft' instance not found — seeding deferred.";
-        }
+        seeder.seedIfMissing();
     }
 
     performMainStartupAction();

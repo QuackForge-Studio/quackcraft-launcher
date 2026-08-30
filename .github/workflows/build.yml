@@ -70,7 +70,7 @@ jobs:
           qt-version: ${{ matrix.qt-version }}
 
       - name: Fetch libnbtplusplus
-        shell: ${{ matrix.msystem && format('msys2 {0}', matrix.msystem) || 'bash' }}
+        shell: bash
         run: |
           if [ ! -d libraries/libnbtplusplus/.git ]; then
             git clone --depth 1 https://github.com/PrismLauncher/libnbtplusplus.git libraries/libnbtplusplus
@@ -110,7 +110,7 @@ jobs:
       - name: Configure
         env:
           VCPKG_TRIPLET_ECHO: ${{ env.VCPKG_TRIPLET }}
-        shell: ${{ matrix.msystem && format('msys2 {0}', matrix.msystem) || 'bash' }}
+        shell: bash
         run: |
           echo "=== Environment diagnostics ==="
           echo "CMAKE_PRESET=$CMAKE_PRESET"
@@ -128,7 +128,7 @@ jobs:
             -D VCPKG_TARGET_TRIPLET="$VCPKG_TRIPLET"
 
       - name: Build
-        shell: ${{ matrix.msystem && format('msys2 {0}', matrix.msystem) || 'bash' }}
+        shell: bash
         run: |
           echo "=== Build directory ==="
           ls -la build/ 2>/dev/null || echo "no build/ dir"
@@ -137,7 +137,7 @@ jobs:
           cmake --build --preset "$CMAKE_PRESET" 2>&1 | tail -100
 
       - name: Run tests
-        shell: ${{ matrix.msystem && format('msys2 {0}', matrix.msystem) || 'bash' }}
+        shell: bash
         run: |
           ctest --preset "$CMAKE_PRESET" --build-config Release --output-on-failure
         continue-on-error: true

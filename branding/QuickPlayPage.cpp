@@ -15,6 +15,7 @@
 #include "BuildConfig.h"
 #include "InstanceList.h"
 #include "BaseInstance.h"
+#include "minecraft/MinecraftInstance.h"
 
 #include <QApplication>
 #include <QComboBox>
@@ -270,7 +271,14 @@ void QuickPlayPage::onPlayClicked()
 
     // Hand the launch off to Prism. The "in-game name" param goes via
     // the offline-name flag, which works without a Microsoft login.
-    APPLICATION->launch(inst, LaunchMode::Offline, nullptr, nullptr, name);
+    auto* mcInstance = dynamic_cast<MinecraftInstance*>(inst);
+    if (!mcInstance) {
+        qWarning() << "QuackCraft: instance" << inst->name()
+                   << "is not a Minecraft instance; cannot quick-play.";
+        setBusy(false);
+        return;
+    }
+    APPLICATION->launch(mcInstance, LaunchMode::Offline, nullptr, nullptr, name);
     setBusy(false);
 }
 

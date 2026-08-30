@@ -151,8 +151,8 @@ jobs:
           echo "=== Build directory ==="
           ls -la build/ 2>/dev/null || echo "no build/ dir"
           echo "=== CMAKE_PRESET=$CMAKE_PRESET ==="
-          echo "=== Running cmake --build --preset $CMAKE_PRESET ==="
-          cmake --build --preset "$CMAKE_PRESET" 2>&1 | tail -100
+          echo "=== Running cmake --build --preset $CMAKE_PRESET --config Release ==="
+          cmake --build --preset "$CMAKE_PRESET" --config Release 2>&1 | tail -100
 
       - name: Build (MinGW)
         if: matrix.msystem != ''
@@ -160,7 +160,7 @@ jobs:
         run: |
           Write-Host "=== Build directory ==="
           if (Test-Path build) { Get-ChildItem build | Select-Object Name | Format-Table | Out-String } else { Write-Host "no build/ dir" }
-          msys2 -c "cmake --build --preset '${{ env.CMAKE_PRESET }}' 2>&1 | tail -200"
+          msys2 -c "cmake --build --preset '${{ env.CMAKE_PRESET }}' --config Release 2>&1 | tail -200"
 
       - name: Run tests (non-MinGW)
         if: matrix.msystem == ''

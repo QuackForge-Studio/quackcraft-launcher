@@ -141,8 +141,10 @@ jobs:
           Write-Host "=== Real configure ==="
           # UCRT64's <c++config.h> pre-defines NOMINMAX via the C library
           # wrappers, but Prism's launcher/FileSystem.cpp re-defines it.
-          # -Wno-error=redefined treats that one warning as a warning.
-          msys2 -c "cmake --preset '${{ env.CMAKE_PRESET }}' -D VCPKG_HOST_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D VCPKG_TARGET_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D CMAKE_CXX_FLAGS='-Wno-error=redefined'"
+          # Plain GCC has no -Wredefined, so we instead drop -Werror
+          # for the whole MinGW build (most of Prism's warnings are
+          # portability flags that don't matter for a working build).
+          msys2 -c "cmake --preset '${{ env.CMAKE_PRESET }}' -D VCPKG_HOST_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D VCPKG_TARGET_TRIPLET='${{ env.VCPKG_TRIPLET }}' -D CMAKE_CXX_FLAGS='-Wno-error'"
 
       - name: Build (non-MinGW)
         if: matrix.msystem == ''

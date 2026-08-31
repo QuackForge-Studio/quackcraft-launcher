@@ -15,7 +15,14 @@
 #include "BuildConfig.h"
 #include "InstanceList.h"
 #include "BaseInstance.h"
+#include "InstanceTask.h"
+#include "QObjectPtr.h"
 #include "minecraft/MinecraftInstance.h"
+#include "minecraft/VanillaInstanceCreationTask.h"
+#include "meta/Index.h"
+#include "meta/VersionList.h"
+#include "meta/Version.h"
+#include "ui/dialogs/ProgressDialog.h"
 
 #include <QApplication>
 #include <QComboBox>
@@ -254,9 +261,10 @@ void QuickPlayPage::onPlayClicked()
 
     setBusy(true);
 
-    // Find or create the QuackCraft instance. For now we only
-    // support the case where the seeded instance is already there.
-    // A future change will spin up a VanillaCreationTask if not.
+    // Find or create the QuackCraft instance. If it doesn't exist yet,
+    // we spin up a VanillaCreationTask for the requested MC version and
+    // run it in a modal progress dialog (the same dialog Prism uses for
+    // "Add Instance"). Once it's done, we launch.
     BaseInstance* inst = nullptr;
     for (int i = 0; i < APPLICATION->instances()->count(); ++i) {
         auto* candidate = APPLICATION->instances()->at(i);
@@ -267,11 +275,54 @@ void QuickPlayPage::onPlayClicked()
     }
 
     if (!inst) {
-        qWarning() << "QuackCraft: no default instance yet. Quick Play wants"
-                   << "the seeded instance; please run the setup wizard once"
-                   << "or use the full launcher UI to create an instance.";
-        setBusy(false);
-        return;
+        const QString descriptor = selectedVersionDescriptor();
+        if (descriptor.isEmpty()) {
+            setBusy(false);
+            return;
+        }
+
+        auto* index = APPLICATION->metadataIndex();
+        if (!index) {
+            qWarning() << "QuackCraft: metadata index not ready; cannot create instance.";
+            setBusy(false);
+            return;
+        }
+        auto vlist = index->get("net.minecraft");
+        if (!vlist) {
+            qWarning() << "QuackCraft: net.minecraft version list missing.";
+            setBusy(false);
+            return;
+        }
+        auto version = vlist->getVersion(descriptor);
+
+        auto* task = new VanillaCreationTask(version);
+        task->setName(QLatin1String(Seeder::defaultInstanceName()));
+        task->setIcon("default");
+
+        // wrapInstanceTask handles the instance directory + id assignment.
+        unique_qobject_ptr<Task> wrapped(APPLICATION->instances()->wrapInstanceTask(task));
+        ProgressDialog loadDialog(window());
+        loadDialog.setSkipButton(true, tr("Abort"));
+        loadDialog.execWithTask(wrapped.get());
+        if (!wrapped->isFinished()) {
+            qWarning() << "QuackCraft: instance creation was aborted or failed.";
+            setBusy(false);
+            return;
+        }
+
+        // Re-find the instance now that it should exist.
+        for (int i = 0; i < APPLICATION->instances()->count(); ++i) {
+            auto* candidate = APPLICATION->instances()->at(i);
+            if (candidate && candidate->name() == QLatin1String(Seeder::defaultInstanceName())) {
+                inst = candidate;
+                break;
+            }
+        }
+        if (!inst) {
+            qWarning() << "QuackCraft: instance creation finished but instance not found.";
+            setBusy(false);
+            return;
+        }
     }
 
     // Hand the launch off to Prism. The "in-game name" param goes via

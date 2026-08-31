@@ -210,6 +210,11 @@ void QuickPlayPage::populateVersionDropdown()
         QStringLiteral("Type the version descriptor (e.g. 26.2, 1.21.4) of the instance you want to launch."));
 }
 
+QString QuickPlayPage::inGameName() const
+{
+    return m_nameEdit ? m_nameEdit->text().trimmed() : QString();
+}
+
 void QuickPlayPage::onVersionListReady()
 {
     populateVersionDropdown();

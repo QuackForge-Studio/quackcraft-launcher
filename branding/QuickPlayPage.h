@@ -44,7 +44,7 @@ class QuickPlayPage : public QWidget {
     void onVersionListReady();
 
     /// Returns the in-game name the user typed. Empty string if blank.
-    QString inGameName() const { return m_nameEdit ? m_nameEdit->text().trimmed() : QString(); }
+    QString inGameName() const;
 
     /// Returns the descriptor (e.g. "26.2") of the version the user
     /// selected. Empty string if the version list isn't loaded yet.
